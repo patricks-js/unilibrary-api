@@ -12,7 +12,6 @@ import {
 export const wishlistRoutes = new Elysia({ prefix: "/wishlist" })
   .use(betterAuth)
   .guard({ auth: true })
-  // GET /wishlist - Get user
   .get(
     "/",
     async ({ user, query }) => {
@@ -75,8 +74,6 @@ export const wishlistRoutes = new Elysia({ prefix: "/wishlist" })
       }),
     },
   )
-
-  // POST /wishlist - Add book to wishlist
   .post(
     "/",
     async ({ user, body }) => {
@@ -97,7 +94,6 @@ export const wishlistRoutes = new Elysia({ prefix: "/wishlist" })
           };
         }
 
-        // Check if book is already in wishlist
         const existingWishlistItem = await db
           .select()
           .from(wishlist)
@@ -118,7 +114,6 @@ export const wishlistRoutes = new Elysia({ prefix: "/wishlist" })
 
         const wishlistId = crypto.randomUUID();
 
-        // Add to wishlist
         const newWishlistItem = await db
           .insert(wishlist)
           .values({
@@ -149,15 +144,12 @@ export const wishlistRoutes = new Elysia({ prefix: "/wishlist" })
       }),
     },
   )
-
-  // DELETE /wishlist/:bookId - Remove book from wishlist
   .delete(
     "/:bookId",
     async ({ user, params }) => {
       try {
         const { bookId } = wishlistBookIdSchema.parse(params);
 
-        // Find and delete the wishlist item
         const deletedItem = await db
           .delete(wishlist)
           .where(and(eq(wishlist.userId, user.id), eq(wishlist.bookId, bookId)))
@@ -186,8 +178,6 @@ export const wishlistRoutes = new Elysia({ prefix: "/wishlist" })
       }),
     },
   )
-
-  // PATCH /wishlist/:bookId - Update wishlist item
   .patch(
     "/:bookId",
     async ({ user, params, body }) => {
@@ -195,7 +185,6 @@ export const wishlistRoutes = new Elysia({ prefix: "/wishlist" })
         const { bookId } = wishlistBookIdSchema.parse(params);
         const updateData = addToWishlistSchema.partial().parse(body);
 
-        // Update the wishlist item
         const updatedItem = await db
           .update(wishlist)
           .set({
