@@ -13,7 +13,6 @@ import {
 export const loansRoutes = new Elysia({ prefix: "/loans" })
   .use(betterAuth)
   .guard({ auth: true })
-  // GET /loans - Get user's active loans
   .get(
     "/",
     async ({ user, query }) => {
@@ -106,15 +105,12 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
       }),
     },
   )
-
-  // POST /loans - Create a new loan
   .post(
     "/",
     async ({ user, body }) => {
       try {
         const loanData = createLoanSchema.parse(body);
 
-        // Check if book exists and is available
         const book = await db
           .select()
           .from(books)
@@ -143,7 +139,6 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
           };
         }
 
-        // Check if user already has an active loan for this book
         const existingLoan = await db
           .select()
           .from(loans)
@@ -163,14 +158,12 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
           };
         }
 
-        // Calculate due date (default 14 days from now)
         const dueDate = loanData.dueDate
           ? new Date(loanData.dueDate)
           : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
 
         const loanId = crypto.randomUUID();
 
-        // Create the loan
         const newLoan = await db
           .insert(loans)
           .values({
@@ -184,7 +177,6 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
           })
           .returning();
 
-        // Update book availability
         await db
           .update(books)
           .set({
@@ -211,8 +203,6 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
       }),
     },
   )
-
-  // PATCH /loans/:loanId/return - Return a book
   .patch(
     "/:loanId/return",
     async ({ user, params, body }) => {
@@ -220,7 +210,6 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
         const { loanId } = loanIdSchema.parse(params);
         const returnData = returnLoanSchema.parse(body);
 
-        // Find the loan
         const loan = await db
           .select()
           .from(loans)
@@ -241,7 +230,6 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
           };
         }
 
-        // Update the loan
         const updatedLoan = await db
           .update(loans)
           .set({
@@ -253,7 +241,6 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
           .where(eq(loans.id, loanId))
           .returning();
 
-        // Update book availability
         await db
           .update(books)
           .set({
@@ -282,8 +269,6 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
       }),
     },
   )
-
-  // GET /loans/history - Get loan history
   .get(
     "/history",
     async ({ user, query }) => {

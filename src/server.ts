@@ -1,7 +1,7 @@
 import { cors } from "@elysiajs/cors";
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
-import { OpenAPI } from "./lib/auth";
+import { auth, OpenAPI } from "./lib/auth";
 import { booksRoutes } from "./routes/books";
 import { loansRoutes } from "./routes/loans";
 import { readingStatusRoutes } from "./routes/reading";
@@ -24,11 +24,12 @@ const app = new Elysia()
       },
     }),
   )
+  .mount(auth.handler)
   .use(booksRoutes)
   .use(loansRoutes)
   .use(wishlistRoutes)
   .use(readingStatusRoutes)
-  .listen(3333);
+  .listen(3000);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
