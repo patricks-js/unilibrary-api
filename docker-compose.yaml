@@ -1,0 +1,23 @@
+name: unilibrary Dev Services
+
+services:
+  db:
+    image: bitnami/postgresql:16
+    container_name: unilibrary-db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_DATABASE=unilibrary_db
+    volumes:
+      - unilibrary-db-data:/bitnami/postgresql
+    networks:
+      - unilibrary-network
+
+volumes:
+  unilibrary-db-data:
+
+networks:
+  unilibrary-network:
