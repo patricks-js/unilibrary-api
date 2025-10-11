@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Book validation schemas
 export const bookSearchSchema = z.object({
   q: z.string().optional(),
   intitle: z.string().optional(),
@@ -22,10 +21,9 @@ export const bookIdSchema = z.object({
   id: z.string().min(1),
 });
 
-// Loan validation schemas
 export const createLoanSchema = z.object({
   bookId: z.string().min(1),
-  dueDate: z.date().optional(), // Will be calculated if not provided
+  dueDate: z.coerce.date().optional(),
 });
 
 export const loanIdSchema = z.object({
@@ -36,7 +34,6 @@ export const returnLoanSchema = z.object({
   notes: z.string().optional(),
 });
 
-// Wishlist validation schemas
 export const addToWishlistSchema = z.object({
   bookId: z.string().min(1),
   priority: z.number().min(1).max(5).default(1),
@@ -47,7 +44,6 @@ export const wishlistBookIdSchema = z.object({
   bookId: z.string().min(1),
 });
 
-// Reading status validation schemas
 export const updateReadingStatusSchema = z.object({
   status: z.enum([
     "want_to_read",
@@ -59,23 +55,21 @@ export const updateReadingStatusSchema = z.object({
   progressPercentage: z.number().min(0).max(100).optional(),
   rating: z.number().min(1).max(5).optional(),
   review: z.string().optional(),
-  startDate: z.date().optional(),
-  finishDate: z.date().optional(),
+  startDate: z.coerce.date().optional(),
+  finishDate: z.coerce.date().optional(),
 });
 
 export const readingStatusBookIdSchema = z.object({
   bookId: z.string().min(1),
 });
 
-// Pagination schema
 export const paginationSchema = z.object({
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(20),
 });
 
-// Loan history filters
 export const loanHistoryFiltersSchema = paginationSchema.extend({
   status: z.enum(["active", "returned", "overdue"]).optional(),
-  startDate: z.date().optional(),
-  endDate: z.date().optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
 });

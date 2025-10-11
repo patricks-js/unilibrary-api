@@ -6,6 +6,7 @@ import { booksRoutes } from "./routes/books";
 import { loansRoutes } from "./routes/loans";
 import { readingStatusRoutes } from "./routes/reading";
 import { wishlistRoutes } from "./routes/wishlist";
+import z from "zod";
 
 const app = new Elysia()
   .use(
@@ -18,6 +19,9 @@ const app = new Elysia()
   )
   .use(
     openapi({
+      mapJsonSchema: {
+        zod: z.toJSONSchema
+      },
       documentation: {
         components: await OpenAPI.components,
         paths: await OpenAPI.getPaths(),

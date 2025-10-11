@@ -29,6 +29,13 @@ export const books = pgTable("books", {
   isAvailable: boolean("is_available").default(true).notNull(),
   totalCopies: integer("total_copies").default(1).notNull(),
   availableCopies: integer("available_copies").default(1).notNull(),
+  // Additional fields from Google Books API
+  kind: text("kind"),
+  etag: text("etag"),
+  selfLink: text("self_link"),
+  saleInfo: jsonb("sale_info"),
+  accessInfo: jsonb("access_info"),
+  searchInfo: jsonb("search_info"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),

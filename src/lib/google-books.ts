@@ -1,29 +1,69 @@
 import { env } from "./env";
 
 export interface GoogleBooksVolume {
+  kind: string;
   id: string;
+  etag: string;
+  selfLink: string;
   volumeInfo: {
     title: string;
     authors?: string[];
-    description?: string;
-    publishedDate?: string;
     publisher?: string;
-    pageCount?: number;
-    categories?: string[];
-    averageRating?: number;
-    ratingsCount?: number;
-    imageLinks?: {
-      thumbnail?: string;
-      smallThumbnail?: string;
-    };
-    language?: string;
+    publishedDate?: string;
+    description?: string;
     industryIdentifiers?: Array<{
       type: string;
       identifier: string;
     }>;
+    readingModes?: {
+      text: boolean;
+      image: boolean;
+    };
+    pageCount?: number;
+    printType?: string;
+    categories?: string[];
+    maturityRating?: string;
+    allowAnonLogging?: boolean;
+    contentVersion?: string;
+    panelizationSummary?: {
+      containsEpubBubbles: boolean;
+      containsImageBubbles: boolean;
+    };
+    imageLinks?: {
+      smallThumbnail?: string;
+      thumbnail?: string;
+    };
+    language?: string;
     previewLink?: string;
     infoLink?: string;
     canonicalVolumeLink?: string;
+    averageRating?: number;
+    ratingsCount?: number;
+  };
+  saleInfo?: {
+    country?: string;
+    saleability?: string;
+    isEbook?: boolean;
+  };
+  accessInfo?: {
+    country?: string;
+    viewability?: string;
+    embeddable?: boolean;
+    publicDomain?: boolean;
+    textToSpeechPermission?: string;
+    epub?: {
+      isAvailable: boolean;
+    };
+    pdf?: {
+      isAvailable: boolean;
+      acsTokenLink?: string;
+    };
+    webReaderLink?: string;
+    accessViewStatus?: string;
+    quoteSharingAllowed?: boolean;
+  };
+  searchInfo?: {
+    textSnippet?: string;
   };
 }
 
@@ -61,11 +101,13 @@ export class GoogleBooksService {
   ): string {
     const url = new URL(`${this.baseUrl}${endpoint}`);
 
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        url.searchParams.append(key, String(value));
+    for(const [key, value] of Object.entries(params)) {
+      if (value === undefined || value === null || value === "") {
+        continue;
       }
-    });
+
+      url.searchParams.append(key, String(value));
+    }
 
     if (this.apiKey) {
       url.searchParams.append("key", this.apiKey);
@@ -75,7 +117,7 @@ export class GoogleBooksService {
   }
 
   async searchBooks(params: BookSearchParams): Promise<GoogleBooksResponse> {
-    const url = this.buildUrl("/volumes", params);
+    const url = this.buildUrl("/volumes?q=subject:fantasy", params);
 
     try {
       const response = await fetch(url);
@@ -148,6 +190,12 @@ export class GoogleBooksService {
       isAvailable: true,
       totalCopies: 1,
       availableCopies: 1,
+      kind: googleBook.kind,
+      etag: googleBook.etag,
+      selfLink: googleBook.selfLink,
+      saleInfo: googleBook.saleInfo,
+      accessInfo: googleBook.accessInfo,
+      searchInfo: googleBook.searchInfo,
     };
   }
 }

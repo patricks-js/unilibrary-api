@@ -56,7 +56,30 @@ Search and list books from Google Books API.
       "canonicalVolumeLink": "https://...",
       "isAvailable": true,
       "totalCopies": 1,
-      "availableCopies": 1
+      "availableCopies": 1,
+      "kind": "books#volume",
+      "etag": "unique_etag",
+      "selfLink": "https://...",
+      "saleInfo": {
+        "country": "US",
+        "saleability": "FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "US",
+        "viewability": "PARTIAL",
+        "embeddable": true,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": { "isAvailable": false },
+        "pdf": { "isAvailable": true },
+        "webReaderLink": "https://...",
+        "accessViewStatus": "SAMPLE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Book excerpt..."
+      }
     }
   ],
   "totalItems": 1000,
@@ -187,10 +210,20 @@ Create a `.env` file with the following variables:
 
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/unilibrary
-GOOGLE_BOOKS_API_KEY=your_google_books_api_key
+GOOGLE_BOOKS_API_KEY=your_google_books_api_key_here
 PORT=3000
 NODE_ENV=development
 ```
+
+### Getting a Google Books API Key
+
+1. Go to [Google Cloud Console](https://console.developers.google.com/)
+2. Create a new project or select an existing one
+3. Enable the "Books API" in the APIs & Services section
+4. Go to "Credentials" and create an API key
+5. Copy the API key to your `.env` file
+
+**Note:** The API key is optional but recommended for better rate limits and reliability.
 
 ## Getting Started
 

@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { db } from "../db";
 import { books } from "../db/schema/books";
@@ -6,14 +6,12 @@ import { googleBooksService } from "../lib/google-books";
 import { bookIdSchema, bookSearchSchema } from "../lib/validation";
 
 export const booksRoutes = new Elysia({ prefix: "/books" })
-  // GET /books - Search and list books
   .get(
     "/",
     async ({ query }) => {
       try {
         const searchParams = bookSearchSchema.parse(query);
 
-        // Search books from Google Books API
         const googleBooksResponse =
           await googleBooksService.searchBooks(searchParams);
 
@@ -26,22 +24,19 @@ export const booksRoutes = new Elysia({ prefix: "/books" })
           };
         }
 
-        // Transform Google Books data to our internal format
         const transformedBooks = googleBooksResponse.items.map((book) =>
           googleBooksService.transformGoogleBookToInternal(book),
         );
 
-        // Check availability in our database for each book
         const bookIds = transformedBooks.map((book) => book.id);
         const existingBooks =
           bookIds.length > 0
             ? await db
                 .select()
                 .from(books)
-                .where(sql`${books.id} = ANY(${bookIds})`)
+                .where(inArray(books.id, bookIds))
             : [];
 
-        // Merge availability data
         const booksWithAvailability = transformedBooks.map((book) => {
           const existingBook = existingBooks.find((eb) => eb.id === book.id);
           return {
@@ -99,15 +94,12 @@ export const booksRoutes = new Elysia({ prefix: "/books" })
       }),
     },
   )
-
-  // GET /books/:id - Get book details
   .get(
     "/:id",
     async ({ params }) => {
       try {
         const { id } = bookIdSchema.parse(params);
 
-        // First check if we have the book in our database
         const existingBook = await db
           .select()
           .from(books)
@@ -118,7 +110,6 @@ export const booksRoutes = new Elysia({ prefix: "/books" })
           return existingBook[0];
         }
 
-        // If not in our database, fetch from Google Books API
         const googleBook = await googleBooksService.getBookById(id);
 
         if (!googleBook) {
@@ -128,15 +119,12 @@ export const booksRoutes = new Elysia({ prefix: "/books" })
           };
         }
 
-        // Transform and return the book data
         const transformedBook =
           googleBooksService.transformGoogleBookToInternal(googleBook);
 
-        // Optionally save to our database for future use
         try {
           await db.insert(books).values(transformedBook);
         } catch (insertError) {
-          // Ignore insert errors (book might already exist)
           console.warn("Failed to save book to database:", insertError);
         }
 

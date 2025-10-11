@@ -197,10 +197,7 @@ export const loansRoutes = new Elysia({ prefix: "/loans" })
       }
     },
     {
-      body: t.Object({
-        bookId: t.String(),
-        dueDate: t.Optional(t.String()),
-      }),
+      body: createLoanSchema,
     },
   )
   .patch(
