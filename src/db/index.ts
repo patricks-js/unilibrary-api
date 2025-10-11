@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/bun-sql";
 import { env } from "../lib/env";
 import * as auth from "./schema/auth";
+import * as books from "./schema/books";
 
 export const db = drizzle({
   connection: {
@@ -10,6 +11,7 @@ export const db = drizzle({
   },
   schema: {
     ...auth,
+    ...books,
   },
   casing: "snake_case",
 });
