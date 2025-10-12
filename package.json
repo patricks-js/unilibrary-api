@@ -9,7 +9,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "dev": "bun --hot ./src/server.ts",
-    "build": "tsdown src/index.ts -d api --dts"
+    "start": "bun run ./src/server.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.5",
