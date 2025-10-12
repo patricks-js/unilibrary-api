@@ -7,11 +7,12 @@ import { loansRoutes } from "./routes/loans";
 import { readingStatusRoutes } from "./routes/reading";
 import { wishlistRoutes } from "./routes/wishlist";
 import z from "zod";
+import { env } from "./lib/env";
 
 export const app = new Elysia()
   .use(
     cors({
-      origin: "http://localhost:5173",
+      origin: env.CORS_ORIGIN ?? "http://localhost:5173",
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
