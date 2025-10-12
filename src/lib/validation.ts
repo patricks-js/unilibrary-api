@@ -23,7 +23,7 @@ export const bookIdSchema = z.object({
 
 export const createLoanSchema = z.object({
   bookId: z.string().min(1),
-  dueDate: z.coerce.date().optional(),
+  dueDate: z.string().optional(),
 });
 
 export const loanIdSchema = z.object({
@@ -55,8 +55,8 @@ export const updateReadingStatusSchema = z.object({
   progressPercentage: z.number().min(0).max(100).optional(),
   rating: z.number().min(1).max(5).optional(),
   review: z.string().optional(),
-  startDate: z.coerce.date().optional(),
-  finishDate: z.coerce.date().optional(),
+  startDate: z.coerce.string().optional(),
+  finishDate: z.coerce.string().optional(),
 });
 
 export const readingStatusBookIdSchema = z.object({
@@ -70,6 +70,6 @@ export const paginationSchema = z.object({
 
 export const loanHistoryFiltersSchema = paginationSchema.extend({
   status: z.enum(["active", "returned", "overdue"]).optional(),
-  startDate: z.coerce.date().optional(),
-  endDate: z.coerce.date().optional(),
+  startDate: z.coerce.string().optional(),
+  endDate: z.coerce.string().optional(),
 });

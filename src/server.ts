@@ -8,7 +8,7 @@ import { readingStatusRoutes } from "./routes/reading";
 import { wishlistRoutes } from "./routes/wishlist";
 import z from "zod";
 
-const app = new Elysia()
+export const app = new Elysia()
   .use(
     cors({
       origin: "http://localhost:5173",
