@@ -7,12 +7,11 @@ import { loansRoutes } from "./routes/loans";
 import { readingStatusRoutes } from "./routes/reading";
 import { wishlistRoutes } from "./routes/wishlist";
 import z from "zod";
-import { env } from "./lib/env";
 
 export const app = new Elysia()
   .use(
     cors({
-      origin: env.CORS_ORIGIN ?? "http://localhost:5173",
+      origin: "https://react-vite-app.lucas-patrick-lsilva.workers.dev",
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
