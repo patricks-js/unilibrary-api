@@ -11,7 +11,7 @@ import z from "zod";
 export const app = new Elysia()
   .use(
     cors({
-      origin: ["https://react-vite-app.lucas-patrick-lsilva.workers.dev", "http://localhost:5173"],
+      origin: ["https://react-vite-app.lucas-patrick-lsilva.workers.dev", "http://localhost:5173", "http://localhost:3000"],
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
