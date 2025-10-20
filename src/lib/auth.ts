@@ -13,6 +13,13 @@ export const auth = betterAuth({
   },
   trustedOrigins: ["https://react-vite-app.lucas-patrick-lsilva.workers.dev", "http://localhost:5173", "http://localhost:3000"],
   plugins: [openAPI()],
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+    },
+  },
 });
 
 let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>;
