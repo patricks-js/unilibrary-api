@@ -117,7 +117,25 @@ export class GoogleBooksService {
   }
 
   async searchBooks(params: BookSearchParams): Promise<GoogleBooksResponse> {
-    const url = this.buildUrl("/volumes?q=subject:fantasy", params);
+    // Constrói a query string baseada nos parâmetros
+    let query = "";
+    
+    if (params.q) {
+      query = params.q;
+    } else {
+      // Constrói query específica baseada nos filtros
+      const queryParts: string[] = [];
+      
+      if (params.intitle) queryParts.push(`intitle:${params.intitle}`);
+      if (params.inauthor) queryParts.push(`inauthor:${params.inauthor}`);
+      if (params.inpublisher) queryParts.push(`inpublisher:${params.inpublisher}`);
+      if (params.subject) queryParts.push(`subject:${params.subject}`);
+      if (params.isbn) queryParts.push(`isbn:${params.isbn}`);
+      
+      query = queryParts.length > 0 ? queryParts.join(" ") : "books";
+    }
+    
+    const url = this.buildUrl(`/volumes?q=${encodeURIComponent(query)}`, params);
 
     try {
       const response = await fetch(url);
