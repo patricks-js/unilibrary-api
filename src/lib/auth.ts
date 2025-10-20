@@ -11,7 +11,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  trustedOrigins: ["http://localhost:5173", "http://localhost:3000"],
+  trustedOrigins: ["https://react-vite-app.lucas-patrick-lsilva.workers.dev", "http://localhost:5173", "http://localhost:3000"],
   plugins: [openAPI()],
 });
 
